@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -28,9 +29,9 @@ public class AlbumEntity {
     @Column(name = "alb_ano",length = 20)
     private String ano;
 
-    @ManyToMany(mappedBy = "artista")
+    @ManyToMany(mappedBy = "albuns")
     @ToString.Exclude
-    private ArrayList<ArtistaEntity> artists;
+    private List<ArtistaEntity> artistas;
 
 
 }

@@ -1,4 +1,4 @@
-package br.com.hamix.infrastructure.gateways;
+package br.com.hamix.infrastructure.gateways.mappers;
 
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;

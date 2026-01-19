@@ -6,6 +6,7 @@ import lombok.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 @Builder
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class ArtistaEntity {
 
     @Id
@@ -26,7 +28,7 @@ public class ArtistaEntity {
     @Column(name = "art_nome",length = 100,nullable = false)
     private String nome;
 
-    @Column(name = "art_nome",length = 100)
+    @Column(name = "art_origem",length = 100)
     private String origem;
 
     @ManyToMany
@@ -36,5 +38,5 @@ public class ArtistaEntity {
             inverseJoinColumns = @JoinColumn(name = "alb_id")
     )
 
-    private ArrayList<AlbumEntity> unidades;
+    private List<AlbumEntity> albuns;
 }
