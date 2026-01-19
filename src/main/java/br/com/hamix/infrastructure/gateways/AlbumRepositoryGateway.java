@@ -3,13 +3,18 @@ package br.com.hamix.infrastructure.gateways;
 import br.com.hamix.domain.gateway.AlbumGateWay;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.infrastructure.gateways.mappers.AlbumEntityMapper;
+import br.com.hamix.infrastructure.gateways.mappers.ArtistaEntityMapper;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AlbumRepositoryGateway implements AlbumGateWay {
+    @Autowired
     private AlbumRepository albumRepository;
 
 
@@ -22,7 +27,8 @@ public class AlbumRepositoryGateway implements AlbumGateWay {
 
     @Override
     public Optional<Album> findById(Integer id) {
-        return Optional.empty();
+        return albumRepository.findById(id)
+                .map(AlbumEntityMapper::toDomain);
     }
 
     @Override

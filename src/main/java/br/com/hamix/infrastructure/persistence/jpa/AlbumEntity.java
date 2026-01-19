@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @Builder
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class AlbumEntity {
 
