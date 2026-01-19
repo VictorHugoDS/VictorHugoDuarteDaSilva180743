@@ -3,7 +3,6 @@ package br.com.hamix.infrastructure.gateways;
 import br.com.hamix.domain.gateway.AlbumGateWay;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.infrastructure.gateways.mappers.AlbumEntityMapper;
-import br.com.hamix.infrastructure.gateways.mappers.ArtistaEntityMapper;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;

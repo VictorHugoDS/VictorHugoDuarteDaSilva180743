@@ -3,8 +3,10 @@ package br.com.hamix.infrastructure.controller.Album;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.infrastructure.controller.Album.dto.SaveAlbumRequest;
 import br.com.hamix.infrastructure.controller.Album.mapper.SaveAlbumDTOMapper;
-import br.com.hamix.usecase.album.criar.SaveAlbumUseCase;
+import br.com.hamix.usecase.album.save.SaveAlbumUseCase;
 import br.com.hamix.usecase.album.get.GetAlbumPorIdUseCase;
+import br.com.hamix.usecase.album.update.UpdateAlbumUseCase;
+import br.com.hamix.usecase.artista.update.UpdateArtistaUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,10 +23,12 @@ public class AlbumController {
 
     private final GetAlbumPorIdUseCase getAlbumPorIdUseCase;
     private final SaveAlbumUseCase saveAlbumUseCase;
+    private final UpdateAlbumUseCase updateArtistaUseCase;
 
-    public AlbumController(GetAlbumPorIdUseCase getAlbumPorIdUseCase, SaveAlbumUseCase saveAlbumUseCase) {
+    public AlbumController(GetAlbumPorIdUseCase getAlbumPorIdUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1) {
         this.getAlbumPorIdUseCase = getAlbumPorIdUseCase;
         this.saveAlbumUseCase = saveAlbumUseCase;
+        this.updateArtistaUseCase = updateArtistaUseCase1;
     }
 
     @Operation(summary = "Buscar album por id",
@@ -50,5 +54,16 @@ public class AlbumController {
         Album albumSalvo = saveAlbumUseCase.salvarAlbum(SaveAlbumDTOMapper.toDomain(request));
             return ResponseEntity.status(HttpStatus.CREATED).body(albumSalvo);
 
+    }
+
+
+    @Operation(summary = "Atualiza album",
+            description = "Atualiza os dados do album e retorna seus dados atualizados",
+            tags = "Album")
+    @ApiResponse(responseCode = "201", description = "Album atualizado")
+    @PutMapping(value = "{id}")
+    public ResponseEntity<Album> updateEntity(@PathVariable String id, @Valid @RequestBody SaveAlbumRequest request){
+        updateArtistaUseCase.updateAlbum(SaveAlbumDTOMapper.toDomain(request), Integer.valueOf(id));
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,4 +1,4 @@
-package br.com.hamix.usecase.artista.criar;
+package br.com.hamix.usecase.artista.save;
 
 import br.com.hamix.domain.gateway.ArtistaGateWay;
 import br.com.hamix.domain.model.Artista;

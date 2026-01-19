@@ -3,8 +3,9 @@ package br.com.hamix.infrastructure.controller.Artista;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.infrastructure.controller.Artista.dto.SaveArtistaRequest;
 import br.com.hamix.infrastructure.controller.Artista.mapper.SaveArtistaDTOMapper;
-import br.com.hamix.usecase.artista.criar.SaveArtistaUseCase;
+import br.com.hamix.usecase.artista.save.SaveArtistaUseCase;
 import br.com.hamix.usecase.artista.get.GetArtistaPorIdUseCase;
+import br.com.hamix.usecase.artista.update.UpdateArtistaUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,10 +22,12 @@ public class ArtistaController {
 
     private final GetArtistaPorIdUseCase getArtistaPorIdUseCase;
     private final SaveArtistaUseCase saveArtistaUseCase;
+    private final UpdateArtistaUseCase updateArtistaUseCase;
 
-    public ArtistaController(GetArtistaPorIdUseCase getArtistaPorIdUseCase, SaveArtistaUseCase saveArtistaUseCase) {
+    public ArtistaController(GetArtistaPorIdUseCase getArtistaPorIdUseCase, SaveArtistaUseCase saveArtistaUseCase, UpdateArtistaUseCase updateArtistaUseCase) {
         this.getArtistaPorIdUseCase = getArtistaPorIdUseCase;
         this.saveArtistaUseCase = saveArtistaUseCase;
+        this.updateArtistaUseCase = updateArtistaUseCase;
     }
 
     @Operation(summary = "Buscar artista por id",
@@ -41,6 +44,7 @@ public class ArtistaController {
         return opArtista.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
+
     @Operation(summary = "Salvar artista",
             description = "Salva os dados do artista e retorna seus dados criados",
             tags = "Artista")
@@ -50,5 +54,15 @@ public class ArtistaController {
         Artista artistaSalvo = saveArtistaUseCase.salvarArtista(SaveArtistaDTOMapper.toDomain(request));
             return ResponseEntity.status(HttpStatus.CREATED).body(artistaSalvo);
 
+    }
+
+    @Operation(summary = "Atualiza artista",
+            description = "Atualiza os dados do artista e retorna seus dados atualizados",
+            tags = "Artista")
+    @ApiResponse(responseCode = "201", description = "Artista atualizado")
+    @PutMapping(value = "{id}")
+    public ResponseEntity<Artista> updateEntity(@PathVariable String id,@Valid @RequestBody SaveArtistaRequest request){
+        updateArtistaUseCase.updateArtista(SaveArtistaDTOMapper.toDomain(request), Integer.valueOf(id));
+        return ResponseEntity.noContent().build();
     }
 }

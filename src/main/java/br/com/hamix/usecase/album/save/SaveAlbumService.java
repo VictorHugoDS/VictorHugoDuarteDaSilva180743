@@ -1,4 +1,4 @@
-package br.com.hamix.usecase.album.criar;
+package br.com.hamix.usecase.album.save;
 
 import br.com.hamix.domain.gateway.AlbumGateWay;
 import br.com.hamix.domain.model.Album;
