@@ -1,4 +1,4 @@
-package br.com.hamix.adapter.persistence.jpa;
+package br.com.hamix.persistence.jpa;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
