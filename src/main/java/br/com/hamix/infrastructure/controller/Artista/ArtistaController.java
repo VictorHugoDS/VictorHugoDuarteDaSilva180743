@@ -57,6 +57,7 @@ public class ArtistaController {
             tags = "Artista")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Artistas Encontrados com sucesso"),
+            @ApiResponse(responseCode = "400",description = "Erro ao ler os dados de entrada"),
             @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
     })
     @GetMapping(value = "/list")
@@ -98,7 +99,11 @@ public class ArtistaController {
     @Operation(summary = "Atualizar artista",
             description = "Atualiza os dados do artista e retorna seus dados atualizados",
             tags = "Artista")
-    @ApiResponse(responseCode = "201", description = "Artista atualizado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Artista atualizado"),
+            @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
+    })
+
     @PutMapping(value = "{id}")
     public ResponseEntity<Artista> updateEntity(@PathVariable String id,@Valid @RequestBody SaveArtistaRequest request){
         updateArtistaUseCase.updateArtista(SaveArtistaDTOMapper.toDomain(request), Integer.valueOf(id));

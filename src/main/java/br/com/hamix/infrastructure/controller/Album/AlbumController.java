@@ -57,6 +57,7 @@ public class AlbumController {
             tags = "Album")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Album Encontrado com sucesso"),
+            @ApiResponse(responseCode = "400",description = "Erro ao ler os dados de entrada"),
             @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
     })
     @GetMapping(value = "/list")
