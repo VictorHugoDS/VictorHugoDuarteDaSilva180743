@@ -1,8 +1,12 @@
 package br.com.hamix.infrastructure.controller.Artista;
 
 import br.com.hamix.domain.model.Artista;
+import br.com.hamix.domain.model.Artista;
+import br.com.hamix.domain.pagination.PaginationRequest;
+import br.com.hamix.domain.pagination.PaginationResponse;
 import br.com.hamix.infrastructure.controller.Artista.dto.SaveArtistaRequest;
 import br.com.hamix.infrastructure.controller.Artista.mapper.SaveArtistaDTOMapper;
+import br.com.hamix.usecase.artista.list.ListArtistaUseCase;
 import br.com.hamix.usecase.artista.save.SaveArtistaUseCase;
 import br.com.hamix.usecase.artista.get.GetArtistaPorIdUseCase;
 import br.com.hamix.usecase.artista.update.UpdateArtistaUseCase;
@@ -23,11 +27,13 @@ public class ArtistaController {
     private final GetArtistaPorIdUseCase getArtistaPorIdUseCase;
     private final SaveArtistaUseCase saveArtistaUseCase;
     private final UpdateArtistaUseCase updateArtistaUseCase;
+    private final ListArtistaUseCase listArtistaUseCase;
 
-    public ArtistaController(GetArtistaPorIdUseCase getArtistaPorIdUseCase, SaveArtistaUseCase saveArtistaUseCase, UpdateArtistaUseCase updateArtistaUseCase) {
+    public ArtistaController(GetArtistaPorIdUseCase getArtistaPorIdUseCase, SaveArtistaUseCase saveArtistaUseCase, UpdateArtistaUseCase updateArtistaUseCase, ListArtistaUseCase listArtistaUseCase) {
         this.getArtistaPorIdUseCase = getArtistaPorIdUseCase;
         this.saveArtistaUseCase = saveArtistaUseCase;
         this.updateArtistaUseCase = updateArtistaUseCase;
+        this.listArtistaUseCase = listArtistaUseCase;
     }
 
     @Operation(summary = "Buscar artista por id",
@@ -45,6 +51,33 @@ public class ArtistaController {
 
     }
 
+    @Operation(summary = "Buscar artistas",
+            description = "Busca os artistas de maneira paginada e com filtros",
+            tags = "Artista")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Artistas Encontrados com sucesso"),
+            @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
+    })
+    @GetMapping(value = "/list")
+    public ResponseEntity<PaginationResponse<Artista>> getById(
+            @RequestParam(required = false,defaultValue = "0") String page,
+            @RequestParam(required = false,defaultValue = "10") String size,
+            @RequestParam(required = false,defaultValue = "id") String sortBy,
+            @RequestParam(required = false,defaultValue = "ASC") String sortDir,
+            @RequestParam(required = false) String name
+    ){
+        PaginationRequest request = PaginationRequest.builder()
+                .page(Integer.valueOf(page))
+                .size(Integer.valueOf(size))
+                .sortBy(sortBy)
+                .sortDirection(sortDir)
+                .build();
+        Artista artistaFilter = new Artista(0,name,"");
+        PaginationResponse<Artista> response = listArtistaUseCase.listAlbunsWithPaginationAndFilters(request,artistaFilter);
+        return ResponseEntity.ok(response);
+    }
+
+
     @Operation(summary = "Salvar artista",
             description = "Salva os dados do artista e retorna seus dados criados",
             tags = "Artista")
@@ -56,7 +89,7 @@ public class ArtistaController {
 
     }
 
-    @Operation(summary = "Atualiza artista",
+    @Operation(summary = "Atualizar artista",
             description = "Atualiza os dados do artista e retorna seus dados atualizados",
             tags = "Artista")
     @ApiResponse(responseCode = "201", description = "Artista atualizado")

@@ -2,10 +2,19 @@ package br.com.hamix.infrastructure.gateways;
 
 import br.com.hamix.domain.gateway.ArtistaGateWay;
 import br.com.hamix.domain.model.Artista;
+import br.com.hamix.domain.model.Artista;
+import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.infrastructure.gateways.mappers.ArtistaEntityMapper;
+import br.com.hamix.infrastructure.gateways.mappers.ArtistaEntityMapper;
+import br.com.hamix.infrastructure.gateways.mappers.PaginationMapper;
+import br.com.hamix.infrastructure.persistence.jpa.ArtistaEntity;
 import br.com.hamix.infrastructure.persistence.jpa.ArtistaEntity;
 import br.com.hamix.infrastructure.persistence.jpa.ArtistaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -32,7 +41,15 @@ public class ArtisaRepositoryGateway implements ArtistaGateWay {
     }
 
     @Override
-    public List<Artista> findAll() {
-        return List.of();
+    public Page<Artista> getPage(PaginationRequest pagination, Artista toFilter) {
+        Pageable pageable = PaginationMapper.toPageable(pagination);
+        ArtistaEntity toFilterEntity = ArtistaEntityMapper.toEntity(toFilter);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnorePaths("id", "origem")
+                .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+        Example<ArtistaEntity> example = Example.of(toFilterEntity, matcher);
+
+        return artistaRepository.findAll(example,pageable).map(ArtistaEntityMapper::toDomain);
     }
 }

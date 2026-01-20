@@ -1,8 +1,11 @@
 package br.com.hamix.infrastructure.controller.Album;
 
 import br.com.hamix.domain.model.Album;
+import br.com.hamix.domain.pagination.PaginationRequest;
+import br.com.hamix.domain.pagination.PaginationResponse;
 import br.com.hamix.infrastructure.controller.Album.dto.SaveAlbumRequest;
 import br.com.hamix.infrastructure.controller.Album.mapper.SaveAlbumDTOMapper;
+import br.com.hamix.usecase.album.list.ListAlbumUseCase;
 import br.com.hamix.usecase.album.save.SaveAlbumUseCase;
 import br.com.hamix.usecase.album.get.GetAlbumPorIdUseCase;
 import br.com.hamix.usecase.album.update.UpdateAlbumUseCase;
@@ -24,11 +27,13 @@ public class AlbumController {
     private final GetAlbumPorIdUseCase getAlbumPorIdUseCase;
     private final SaveAlbumUseCase saveAlbumUseCase;
     private final UpdateAlbumUseCase updateArtistaUseCase;
+    private final ListAlbumUseCase listAlbumUseCase;
 
-    public AlbumController(GetAlbumPorIdUseCase getAlbumPorIdUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1) {
+    public AlbumController(GetAlbumPorIdUseCase getAlbumPorIdUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1, ListAlbumUseCase listAlbumUseCase) {
         this.getAlbumPorIdUseCase = getAlbumPorIdUseCase;
         this.saveAlbumUseCase = saveAlbumUseCase;
         this.updateArtistaUseCase = updateArtistaUseCase1;
+        this.listAlbumUseCase = listAlbumUseCase;
     }
 
     @Operation(summary = "Buscar album por id",
@@ -45,6 +50,33 @@ public class AlbumController {
         return opAlbum.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
+
+    @Operation(summary = "Buscar albuns",
+            description = "Busca os albuns de maneira paginada e com filtros",
+            tags = "Album")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Album Encontrado com sucesso"),
+            @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
+    })
+    @GetMapping(value = "/list")
+    public ResponseEntity<PaginationResponse<Album>> getById(
+            @RequestParam(required = false,defaultValue = "0") String page,
+            @RequestParam(required = false,defaultValue = "10") String size,
+            @RequestParam(required = false,defaultValue = "id") String sortBy,
+            @RequestParam(required = false,defaultValue = "ASC") String sortDir,
+            @RequestParam(required = false) String name
+    ){
+        PaginationRequest request = PaginationRequest.builder()
+                .page(Integer.valueOf(page))
+                .size(Integer.valueOf(size))
+                .sortBy(sortBy)
+                .sortDirection(sortDir)
+                .build();
+        Album albumFilter = new Album(0,name,"");
+        PaginationResponse<Album> response = listAlbumUseCase.listAlbunsWithPaginationAndFilters(request,albumFilter);
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "Salvar album",
             description = "Salva os dados do album e retorna seus dados criados",
             tags = "Album")
@@ -57,7 +89,7 @@ public class AlbumController {
     }
 
 
-    @Operation(summary = "Atualiza album",
+    @Operation(summary = "Atualizar album",
             description = "Atualiza os dados do album e retorna seus dados atualizados",
             tags = "Album")
     @ApiResponse(responseCode = "201", description = "Album atualizado")

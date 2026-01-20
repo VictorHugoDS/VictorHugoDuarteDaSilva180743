@@ -2,10 +2,16 @@ package br.com.hamix.infrastructure.gateways;
 
 import br.com.hamix.domain.gateway.AlbumGateWay;
 import br.com.hamix.domain.model.Album;
+import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.infrastructure.gateways.mappers.AlbumEntityMapper;
+import br.com.hamix.infrastructure.gateways.mappers.PaginationMapper;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +37,16 @@ public class AlbumRepositoryGateway implements AlbumGateWay {
     }
 
     @Override
-    public List<Album> findAll() {
-        return List.of();
+    public Page<Album> getPage(PaginationRequest pagination, Album toFilter) {
+        Pageable pageable = PaginationMapper.toPageable(pagination);
+        AlbumEntity toFilterEntity = AlbumEntityMapper.toEntity(toFilter);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnorePaths("id", "ano")
+                .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+        Example<AlbumEntity> example = Example.of(toFilterEntity, matcher);
+
+        return albumRepository.findAll(example,pageable).map(AlbumEntityMapper::toDomain);
     }
+
 }
