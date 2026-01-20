@@ -1,5 +1,6 @@
 package br.com.hamix.infrastructure.controller.Album;
 
+import br.com.hamix.config.exception.custom.ConversionException;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.domain.pagination.PaginationResponse;
@@ -66,15 +67,19 @@ public class AlbumController {
             @RequestParam(required = false,defaultValue = "ASC") String sortDir,
             @RequestParam(required = false) String name
     ){
-        PaginationRequest request = PaginationRequest.builder()
-                .page(Integer.valueOf(page))
-                .size(Integer.valueOf(size))
-                .sortBy(sortBy)
-                .sortDirection(sortDir)
-                .build();
-        Album albumFilter = new Album(0,name,"");
-        PaginationResponse<Album> response = listAlbumUseCase.listAlbunsWithPaginationAndFilters(request,albumFilter);
-        return ResponseEntity.ok(response);
+        try{
+            PaginationRequest request = PaginationRequest.builder()
+                    .page(Integer.valueOf(page))
+                    .size(Integer.valueOf(size))
+                    .sortBy(sortBy)
+                    .sortDirection(sortDir)
+                    .build();
+            Album albumFilter = new Album(0,name,"");
+            PaginationResponse<Album> response = listAlbumUseCase.listAlbunsWithPaginationAndFilters(request,albumFilter);
+            return ResponseEntity.ok(response);
+        } catch (NumberFormatException e) {
+            throw new ConversionException("Valor de inteiro inválido", e);
+        }
     }
 
     @Operation(summary = "Salvar album",

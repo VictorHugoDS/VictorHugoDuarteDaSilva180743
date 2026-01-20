@@ -1,5 +1,6 @@
 package br.com.hamix.infrastructure.controller.Artista;
 
+import br.com.hamix.config.exception.custom.ConversionException;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
@@ -66,15 +67,20 @@ public class ArtistaController {
             @RequestParam(required = false,defaultValue = "ASC") String sortDir,
             @RequestParam(required = false) String name
     ){
-        PaginationRequest request = PaginationRequest.builder()
-                .page(Integer.valueOf(page))
-                .size(Integer.valueOf(size))
-                .sortBy(sortBy)
-                .sortDirection(sortDir)
-                .build();
-        Artista artistaFilter = new Artista(0,name,"");
-        PaginationResponse<Artista> response = listArtistaUseCase.listAlbunsWithPaginationAndFilters(request,artistaFilter);
-        return ResponseEntity.ok(response);
+        try{
+            PaginationRequest request = PaginationRequest.builder()
+                    .page(Integer.valueOf(page))
+                    .size(Integer.valueOf(size))
+                    .sortBy(sortBy)
+                    .sortDirection(sortDir)
+                    .build();
+            Artista artistaFilter = new Artista(0,name,"");
+            PaginationResponse<Artista> response = listArtistaUseCase.listAlbunsWithPaginationAndFilters(request,artistaFilter);
+            return ResponseEntity.ok(response);
+        } catch (NumberFormatException e) {
+            throw new ConversionException("Valor de inteiro inválido", e);
+        }
+
     }
 
 

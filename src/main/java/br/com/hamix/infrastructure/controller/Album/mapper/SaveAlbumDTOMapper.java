@@ -6,7 +6,7 @@ import br.com.hamix.infrastructure.controller.Album.dto.SaveAlbumResponse;
 
 public class SaveAlbumDTOMapper {
     public static Album toDomain(SaveAlbumRequest request){
-        return new Album(null,request.nome(),request.ano());
+        return new Album(null,request.getNome(),request.getAno());
     }
 
     public static SaveAlbumResponse toResponse(Album domain){

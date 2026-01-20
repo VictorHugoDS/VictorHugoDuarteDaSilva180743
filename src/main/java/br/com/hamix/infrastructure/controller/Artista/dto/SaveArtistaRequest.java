@@ -1,4 +1,14 @@
 package br.com.hamix.infrastructure.controller.Artista.dto;
 
-public record SaveArtistaRequest(String nome,String origem) {
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public class SaveArtistaRequest {
+
+    @NotBlank
+    String nome;
+    String origem;
 }

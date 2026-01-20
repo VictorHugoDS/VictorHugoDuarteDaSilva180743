@@ -1,4 +1,15 @@
 package br.com.hamix.infrastructure.controller.Album.dto;
 
-public record SaveAlbumRequest(String nome,String ano) {
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+public class SaveAlbumRequest {
+    @NotBlank
+    String nome;
+    String ano;
 }

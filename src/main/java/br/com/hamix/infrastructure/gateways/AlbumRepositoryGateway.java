@@ -1,5 +1,6 @@
 package br.com.hamix.infrastructure.gateways;
 
+import br.com.hamix.config.exception.custom.DatabaseException;
 import br.com.hamix.domain.gateway.AlbumGateWay;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.pagination.PaginationRequest;
@@ -26,14 +27,24 @@ public class AlbumRepositoryGateway implements AlbumGateWay {
     @Override
     public Album save(Album album) {
         AlbumEntity entity = AlbumEntityMapper.toEntity(album);
-        AlbumEntity savedEntity = albumRepository.save(entity);
-        return AlbumEntityMapper.toDomain(savedEntity);
+        try{
+            AlbumEntity savedEntity = albumRepository.save(entity);
+            return AlbumEntityMapper.toDomain(savedEntity);
+        } catch (DatabaseException e) {
+            throw new RuntimeException("Ocorreu um erro ao salvar a entidade",e);
+        }
+
     }
 
     @Override
     public Optional<Album> findById(Integer id) {
-        return albumRepository.findById(id)
-                .map(AlbumEntityMapper::toDomain);
+        try {
+            return albumRepository.findById(id)
+                    .map(AlbumEntityMapper::toDomain);
+        } catch (DatabaseException e) {
+            throw new RuntimeException("Ocorreu um erro ao recuperar a entidade",e);
+        }
+
     }
 
     @Override
@@ -46,7 +57,12 @@ public class AlbumRepositoryGateway implements AlbumGateWay {
                 .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
         Example<AlbumEntity> example = Example.of(toFilterEntity, matcher);
 
-        return albumRepository.findAll(example,pageable).map(AlbumEntityMapper::toDomain);
+        try {
+            return albumRepository.findAll(example,pageable).map(AlbumEntityMapper::toDomain);
+        } catch (DatabaseException e) {
+            throw new RuntimeException("Ocorreu um erro ao recuperar as entidades",e);
+        }
+
     }
 
 }

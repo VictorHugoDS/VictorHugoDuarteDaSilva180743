@@ -6,7 +6,7 @@ import br.com.hamix.infrastructure.controller.Artista.dto.SaveArtistaResponse;
 
 public class SaveArtistaDTOMapper {
     public static Artista toDomain(SaveArtistaRequest request){
-        return new Artista(null,request.nome(),request.origem());
+        return new Artista(null,request.getNome(),request.getOrigem());
     }
 
     public static SaveArtistaResponse toResponse(Artista domain){
