@@ -1,7 +1,17 @@
 package br.com.hamix.domain.model;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-public record Album(Integer id,String nome,String ano) {
+@AllArgsConstructor
+@Getter
+@Builder
+@Setter
+public class Album {
+    Integer id;
+    String nome;
+    String ano;
 }

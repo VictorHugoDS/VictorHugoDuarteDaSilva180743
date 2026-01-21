@@ -14,7 +14,7 @@ public class UpdateAlbumService implements UpdateAlbumUseCase {
 
     @Override
     public void updateAlbum(Album reference, Integer id) {
-        Album updatedReference = new Album(id,reference.nome(),reference.ano());
-        albumGateWay.save(updatedReference);
+        reference.setId(id);
+        albumGateWay.save(reference);
     }
 }

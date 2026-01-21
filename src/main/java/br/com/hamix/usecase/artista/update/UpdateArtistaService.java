@@ -14,7 +14,7 @@ public class UpdateArtistaService implements UpdateArtistaUseCase{
 
     @Override
     public void updateArtista(Artista reference, Integer id) {
-        Artista updatedReference = new Artista(id,reference.nome(),reference.origem());
-        artistaGateWay.save(updatedReference);
+        reference.setId(id);
+        artistaGateWay.save(reference);
     }
 }

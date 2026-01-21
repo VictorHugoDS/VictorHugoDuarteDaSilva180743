@@ -2,13 +2,19 @@ package br.com.hamix.infrastructure.controller.Album;
 
 import br.com.hamix.config.exception.custom.ConversionException;
 import br.com.hamix.domain.model.Album;
+import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.domain.pagination.PaginationResponse;
+import br.com.hamix.infrastructure.controller.Album.dto.ArtistaDTO;
+import br.com.hamix.infrastructure.controller.Album.dto.AssociationResponse;
 import br.com.hamix.infrastructure.controller.Album.dto.SaveAlbumRequest;
+import br.com.hamix.infrastructure.controller.Album.mapper.ArtistaDTOMapper;
 import br.com.hamix.infrastructure.controller.Album.mapper.SaveAlbumDTOMapper;
+import br.com.hamix.usecase.album.associate.AssociateArtistsToAlbumUseCase;
+import br.com.hamix.usecase.album.getAssociation.GetAssociationUseCase;
 import br.com.hamix.usecase.album.list.ListAlbumUseCase;
 import br.com.hamix.usecase.album.save.SaveAlbumUseCase;
-import br.com.hamix.usecase.album.get.GetAlbumPorIdUseCase;
+import br.com.hamix.usecase.album.get.GetAlbumUseCase;
 import br.com.hamix.usecase.album.update.UpdateAlbumUseCase;
 import br.com.hamix.usecase.artista.update.UpdateArtistaUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,22 +25,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
-@RequestMapping("album")
+@RequestMapping("/album")
 public class AlbumController {
 
-    private final GetAlbumPorIdUseCase getAlbumPorIdUseCase;
+    private final GetAlbumUseCase getAlbumUseCase;
     private final SaveAlbumUseCase saveAlbumUseCase;
     private final UpdateAlbumUseCase updateArtistaUseCase;
     private final ListAlbumUseCase listAlbumUseCase;
+    private final AssociateArtistsToAlbumUseCase associateArtistsToAlbumUseCase;
+    private final GetAssociationUseCase getAssociationUseCase;
+    private Integer id;
 
-    public AlbumController(GetAlbumPorIdUseCase getAlbumPorIdUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1, ListAlbumUseCase listAlbumUseCase) {
-        this.getAlbumPorIdUseCase = getAlbumPorIdUseCase;
+    public AlbumController(GetAlbumUseCase getAlbumUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1, ListAlbumUseCase listAlbumUseCase, AssociateArtistsToAlbumUseCase associateArtistsToAlbumUseCase, GetAssociationUseCase getAssociationUseCase) {
+        this.getAlbumUseCase = getAlbumUseCase;
         this.saveAlbumUseCase = saveAlbumUseCase;
         this.updateArtistaUseCase = updateArtistaUseCase1;
         this.listAlbumUseCase = listAlbumUseCase;
+        this.associateArtistsToAlbumUseCase = associateArtistsToAlbumUseCase;
+        this.getAssociationUseCase = getAssociationUseCase;
     }
 
     @Operation(summary = "Buscar album por id",
@@ -45,10 +56,10 @@ public class AlbumController {
             @ApiResponse(responseCode = "404",description = "Album não encontrado"),
             @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
     })
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Album> getById(@PathVariable String id){
-        Optional<Album> opAlbum = getAlbumPorIdUseCase.findAlbumById(Integer.valueOf(id));
-        return opAlbum.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Album Album = getAlbumUseCase.findAlbumById(Integer.valueOf(id));
+        return ResponseEntity.ok(Album);
 
     }
 
@@ -92,6 +103,54 @@ public class AlbumController {
         Album albumSalvo = saveAlbumUseCase.salvarAlbum(SaveAlbumDTOMapper.toDomain(request));
             return ResponseEntity.status(HttpStatus.CREATED).body(albumSalvo);
 
+    }
+
+    @Operation(summary = "Buscar Associação de álbum com artistas",
+            description = "Recupera uma lista de associação dos artistas de um determinado álbum",
+            tags = "Album")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Album Encontrado com sucesso"),
+            @ApiResponse(responseCode = "400",description = "Erro ao ler os dados de entrada"),
+            @ApiResponse(responseCode = "404",description = "Não foi possível encontrar a entidade com os dados passados"),
+            @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
+    })
+    @GetMapping(value = "/{id}/associacoes")
+    public ResponseEntity<AssociationResponse> getAssociacoes(@PathVariable Integer id){
+        this.id = id;
+        Album album = getAlbumUseCase.findAlbumById(id);
+        List<ArtistaDTO> artistasAssociados = getAssociationUseCase.getAssociacaoById(id)
+                .stream().map(ArtistaDTOMapper::toDto).toList();
+        AssociationResponse response = AssociationResponse.builder()
+                .nome(album.getNome())
+                .ano(album.getAno())
+                .artistas(artistasAssociados)
+                .build();
+        return ResponseEntity.ok(response);
+
+    }
+
+    @Operation(summary = "Associar álbum a artistas",
+            description = "Associa um álbum a seus artista",
+            tags = "Album")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Album associado com sucesso"),
+            @ApiResponse(responseCode = "400",description = "Erro ao ler os dados de entrada"),
+            @ApiResponse(responseCode = "404",description = "Não foi possível encontrar a entidade com os dados passados"),
+            @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
+    })
+    @PostMapping(value = "/{idAlbum}/associarArtistas")
+    public ResponseEntity<AssociationResponse> associateArtists(
+            @RequestParam Integer idAlbum,
+            @Valid @RequestBody List<Integer> idsArtistas){
+        Album album = associateArtistsToAlbumUseCase.associate(idAlbum,idsArtistas);
+        List<ArtistaDTO> artistasAssociados = getAssociationUseCase.getAssociacaoById(idAlbum)
+                .stream().map(ArtistaDTOMapper::toDto).toList();
+        AssociationResponse response = AssociationResponse.builder()
+                .nome(album.getNome())
+                .ano(album.getAno())
+                .artistas(artistasAssociados)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
 

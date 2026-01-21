@@ -16,7 +16,7 @@ public class GetArtistaPorIdService implements GetArtistaPorIdUseCase {
     }
 
     @Override
-    public Optional<Artista> findArtistaById(Integer id) {
+    public Artista findArtistaById(Integer id) {
         return artistaGateWay.findById(id);
     }
 }

@@ -10,6 +10,6 @@ public class SaveAlbumDTOMapper {
     }
 
     public static SaveAlbumResponse toResponse(Album domain){
-        return new SaveAlbumResponse(domain.id(),domain.nome(),domain.ano());
+        return new SaveAlbumResponse(domain.getId(), domain.getNome(),domain.getAno());
     }
 }

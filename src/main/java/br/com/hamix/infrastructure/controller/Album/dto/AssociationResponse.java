@@ -1,20 +1,16 @@
-package br.com.hamix.domain.model;
-
+package br.com.hamix.infrastructure.controller.Album.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 @AllArgsConstructor
 @Getter
 @Builder
-@Setter
-public class Artista {
-    Integer id;
+public class AssociationResponse {
     String nome;
-    String origem;
-    List<Album> albuns;
+    String ano;
+    List<ArtistaDTO> artistas;
 }

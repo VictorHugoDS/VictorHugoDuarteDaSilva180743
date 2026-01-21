@@ -7,15 +7,15 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class GetAlbumPorIdService implements GetAlbumPorIdUseCase {
+public class GetAlbumService implements GetAlbumUseCase {
     private final AlbumGateWay albumGateWay;
 
-    public GetAlbumPorIdService(AlbumGateWay albumGateWay) {
+    public GetAlbumService(AlbumGateWay albumGateWay) {
         this.albumGateWay = albumGateWay;
     }
 
     @Override
-    public Optional<Album> findAlbumById(Integer id) {
+    public Album findAlbumById(Integer id) {
         return albumGateWay.findById(id);
     }
 }

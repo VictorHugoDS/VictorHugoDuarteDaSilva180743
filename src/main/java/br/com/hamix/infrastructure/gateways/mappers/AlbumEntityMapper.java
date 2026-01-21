@@ -6,12 +6,16 @@ import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
 public class AlbumEntityMapper {
     public static AlbumEntity toEntity(Album domain){
         return AlbumEntity.builder()
-                .id(domain.id())
-                .nome(domain.nome())
-                .ano(domain.ano())
+                .id(domain.getId())
+                .nome(domain.getNome())
+                .ano(domain.getAno())
                 .build();
     }
     public static Album toDomain(AlbumEntity entity){
-        return new Album(entity.getId(),entity.getNome(),entity.getAno());
+        return Album.builder()
+                .id(entity.getId())
+                .nome(entity.getNome())
+                .ano(entity.getAno())
+                .build();
     }
 }

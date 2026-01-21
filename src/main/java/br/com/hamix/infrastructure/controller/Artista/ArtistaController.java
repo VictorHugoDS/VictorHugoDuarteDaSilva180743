@@ -47,8 +47,8 @@ public class ArtistaController {
     })
     @GetMapping(value = "{id}")
     public ResponseEntity<Artista> getById(@PathVariable String id){
-        Optional<Artista> opArtista = getArtistaPorIdUseCase.findArtistaById(Integer.valueOf(id));
-        return opArtista.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Artista artista = getArtistaPorIdUseCase.findArtistaById(Integer.valueOf(id));
+        return ResponseEntity.ok(artista);
 
     }
 
@@ -75,7 +75,7 @@ public class ArtistaController {
                     .sortBy(sortBy)
                     .sortDirection(sortDir)
                     .build();
-            Artista artistaFilter = new Artista(0,name,"");
+            Artista artistaFilter = Artista.builder().nome(name).build();
             PaginationResponse<Artista> response = listArtistaUseCase.listAlbunsWithPaginationAndFilters(request,artistaFilter);
             return ResponseEntity.ok(response);
         } catch (NumberFormatException e) {
@@ -93,8 +93,8 @@ public class ArtistaController {
     public ResponseEntity<Artista> saveEntity(@Valid @RequestBody SaveArtistaRequest request){
         Artista artistaSalvo = saveArtistaUseCase.salvarArtista(SaveArtistaDTOMapper.toDomain(request));
             return ResponseEntity.status(HttpStatus.CREATED).body(artistaSalvo);
-
     }
+
 
     @Operation(summary = "Atualizar artista",
             description = "Atualiza os dados do artista e retorna seus dados atualizados",

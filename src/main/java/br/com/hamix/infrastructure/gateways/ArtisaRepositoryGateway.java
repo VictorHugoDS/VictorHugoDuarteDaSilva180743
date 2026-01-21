@@ -1,11 +1,15 @@
 package br.com.hamix.infrastructure.gateways;
 
+import br.com.hamix.config.exception.custom.DataNotFoundedException;
 import br.com.hamix.config.exception.custom.DatabaseException;
 import br.com.hamix.domain.gateway.ArtistaGateWay;
+import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.infrastructure.gateways.mappers.ArtistaEntityMapper;
 import br.com.hamix.infrastructure.gateways.mappers.PaginationMapper;
+import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
+import br.com.hamix.infrastructure.persistence.jpa.AlbumRepository;
 import br.com.hamix.infrastructure.persistence.jpa.ArtistaEntity;
 import br.com.hamix.infrastructure.persistence.jpa.ArtistaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,10 +28,16 @@ public class ArtisaRepositoryGateway implements ArtistaGateWay {
     @Autowired
     ArtistaRepository artistaRepository;
 
+    @Autowired
+    AlbumRepository albumRepository;
+
     @Override
     public Artista save(Artista artist) {
         ArtistaEntity entity = ArtistaEntityMapper.toEntity(artist);
+        List<Integer> idsAlbumEntity = entity.getAlbuns().stream().map(AlbumEntity::getId).toList();
         try{
+            List<AlbumEntity> albunsEntities = albumRepository.findAllById(idsAlbumEntity);
+            entity.setAlbuns(albunsEntities);
             ArtistaEntity savedEntity = artistaRepository.save(entity);
             return ArtistaEntityMapper.toDomain(savedEntity);
         } catch (DatabaseException e) {
@@ -36,13 +47,10 @@ public class ArtisaRepositoryGateway implements ArtistaGateWay {
     }
 
     @Override
-    public Optional<Artista> findById(Integer id) {
-        try{
-            return artistaRepository.findById(id)
-                    .map(ArtistaEntityMapper::toDomain);
-        } catch (DatabaseException e) {
-            throw new RuntimeException("Ocorreu um erro ao recuperar a entidade",e);
-        }
+    public Artista findById(Integer id) {
+        ArtistaEntity entity = artistaRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundedException("Não foi possível encontrar o Artista"));
+        return ArtistaEntityMapper.toDomain(entity);
 
     }
 

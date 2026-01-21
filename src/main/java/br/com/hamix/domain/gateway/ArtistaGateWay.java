@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ArtistaGateWay {
     Artista save(Artista artist);
-    Optional<Artista> findById(Integer id);
+    Artista findById(Integer id);
     Page<Artista> getPage(PaginationRequest pagination, Artista toFilter);
 }
