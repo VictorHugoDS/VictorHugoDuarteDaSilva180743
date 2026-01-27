@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public interface AlbumGateWay {
+public interface AlbumGateway {
     Album save(Album album);
     Album findById(Integer id);
     Page<Album> getPage(PaginationRequest pagination, Album toFilter);

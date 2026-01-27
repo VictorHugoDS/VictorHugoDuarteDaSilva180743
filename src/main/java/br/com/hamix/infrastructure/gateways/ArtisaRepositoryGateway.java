@@ -2,8 +2,7 @@ package br.com.hamix.infrastructure.gateways;
 
 import br.com.hamix.config.exception.custom.DataNotFoundedException;
 import br.com.hamix.config.exception.custom.DatabaseException;
-import br.com.hamix.domain.gateway.ArtistaGateWay;
-import br.com.hamix.domain.model.Album;
+import br.com.hamix.domain.gateway.ArtistaGateway;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.infrastructure.gateways.mappers.ArtistaEntityMapper;
@@ -20,10 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ArtisaRepositoryGateway implements ArtistaGateWay {
+public class ArtisaRepositoryGateway implements ArtistaGateway {
 
     @Autowired
     ArtistaRepository artistaRepository;

@@ -24,6 +24,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -94,16 +95,6 @@ public class AlbumController {
         }
     }
 
-    @Operation(summary = "Salvar album",
-            description = "Salva os dados do album e retorna seus dados criados",
-            tags = "Album")
-    @ApiResponse(responseCode = "201", description = "Album criado")
-    @PostMapping
-    public ResponseEntity<Album> saveEntity(@Valid @RequestBody SaveAlbumRequest request){
-        Album albumSalvo = saveAlbumUseCase.salvarAlbum(SaveAlbumDTOMapper.toDomain(request));
-            return ResponseEntity.status(HttpStatus.CREATED).body(albumSalvo);
-
-    }
 
     @Operation(summary = "Buscar Associação de álbum com artistas",
             description = "Recupera uma lista de associação dos artistas de um determinado álbum",
@@ -129,6 +120,18 @@ public class AlbumController {
 
     }
 
+    @Operation(summary = "Salvar album",
+            description = "Salva os dados do album e retorna seus dados criados",
+            tags = "Album")
+    @ApiResponse(responseCode = "201", description = "Album criado")
+    @PostMapping
+    public ResponseEntity<Album> saveEntity(@Valid @RequestBody SaveAlbumRequest request){
+        Album albumSalvo = saveAlbumUseCase.salvarAlbum(SaveAlbumDTOMapper.toDomain(request));
+            return ResponseEntity.status(HttpStatus.CREATED).body(albumSalvo);
+
+    }
+
+
     @Operation(summary = "Associar álbum a artistas",
             description = "Associa um álbum a seus artista",
             tags = "Album")
@@ -151,6 +154,16 @@ public class AlbumController {
                 .artistas(artistasAssociados)
                 .build();
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Salvar fotos de um album",
+            description = "Salva as fotos de um album",
+            tags = "Album")
+    @ApiResponse(responseCode = "201", description = "Fotos salvas")
+    @PostMapping(value = "/{idAlbum}/fotos")
+    public ResponseEntity<Album> saveFotosAlbum( @PathVariable Long id,
+                                                 @RequestParam("fotos") List<MultipartFile> fotos){
+
     }
 
 

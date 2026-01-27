@@ -2,7 +2,7 @@ package br.com.hamix.infrastructure.gateways;
 
 import br.com.hamix.config.exception.custom.DataNotFoundedException;
 import br.com.hamix.config.exception.custom.DatabaseException;
-import br.com.hamix.domain.gateway.AlbumGateWay;
+import br.com.hamix.domain.gateway.AlbumGateway;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
@@ -18,14 +18,12 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class AlbumRepositoryGateway implements AlbumGateWay {
+public class AlbumRepositoryGateway implements AlbumGateway {
     @Autowired
     private AlbumRepository albumRepository;
 

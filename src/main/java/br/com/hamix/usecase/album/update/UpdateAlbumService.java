@@ -1,14 +1,14 @@
 package br.com.hamix.usecase.album.update;
 
-import br.com.hamix.domain.gateway.AlbumGateWay;
+import br.com.hamix.domain.gateway.AlbumGateway;
 import br.com.hamix.domain.model.Album;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UpdateAlbumService implements UpdateAlbumUseCase {
-    private final AlbumGateWay albumGateWay;
+    private final AlbumGateway albumGateWay;
 
-    public UpdateAlbumService(AlbumGateWay albumGateWay) {
+    public UpdateAlbumService(AlbumGateway albumGateWay) {
         this.albumGateWay = albumGateWay;
     }
 

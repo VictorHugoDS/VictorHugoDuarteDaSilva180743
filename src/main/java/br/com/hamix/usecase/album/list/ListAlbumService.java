@@ -1,6 +1,6 @@
 package br.com.hamix.usecase.album.list;
 
-import br.com.hamix.domain.gateway.AlbumGateWay;
+import br.com.hamix.domain.gateway.AlbumGateway;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.domain.pagination.PaginationResponse;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ListAlbumService implements ListAlbumUseCase {
-    private final AlbumGateWay albumGateWay;
+    private final AlbumGateway albumGateWay;
 
-    public ListAlbumService(AlbumGateWay albumGateWay) {
+    public ListAlbumService(AlbumGateway albumGateWay) {
         this.albumGateWay = albumGateWay;
     }
 

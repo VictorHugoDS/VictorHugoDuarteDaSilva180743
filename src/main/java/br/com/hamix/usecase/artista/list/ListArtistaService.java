@@ -1,6 +1,6 @@
 package br.com.hamix.usecase.artista.list;
 
-import br.com.hamix.domain.gateway.ArtistaGateWay;
+import br.com.hamix.domain.gateway.ArtistaGateway;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.domain.pagination.PaginationResponse;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ListArtistaService implements ListArtistaUseCase {
-    private final ArtistaGateWay artistaGateWay;
+    private final ArtistaGateway artistaGateWay;
 
-    public ListArtistaService(ArtistaGateWay artistaGateWay) {
+    public ListArtistaService(ArtistaGateway artistaGateWay) {
         this.artistaGateWay = artistaGateWay;
     }
 

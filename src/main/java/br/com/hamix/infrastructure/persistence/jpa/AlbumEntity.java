@@ -34,5 +34,4 @@ public class AlbumEntity {
     @ToString.Exclude
     private List<ArtistaEntity> artistas;
 
-
 }
