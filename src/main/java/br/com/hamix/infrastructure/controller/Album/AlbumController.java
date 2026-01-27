@@ -15,6 +15,7 @@ import br.com.hamix.usecase.album.getAssociation.GetAssociationUseCase;
 import br.com.hamix.usecase.album.list.ListAlbumUseCase;
 import br.com.hamix.usecase.album.save.SaveAlbumUseCase;
 import br.com.hamix.usecase.album.get.GetAlbumUseCase;
+import br.com.hamix.usecase.album.savefoto.SaveFotosUseCase;
 import br.com.hamix.usecase.album.update.UpdateAlbumUseCase;
 import br.com.hamix.usecase.artista.update.UpdateArtistaUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,15 +39,16 @@ public class AlbumController {
     private final ListAlbumUseCase listAlbumUseCase;
     private final AssociateArtistsToAlbumUseCase associateArtistsToAlbumUseCase;
     private final GetAssociationUseCase getAssociationUseCase;
-    private Integer id;
+    private final SaveFotosUseCase saveFotosUseCase;
 
-    public AlbumController(GetAlbumUseCase getAlbumUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1, ListAlbumUseCase listAlbumUseCase, AssociateArtistsToAlbumUseCase associateArtistsToAlbumUseCase, GetAssociationUseCase getAssociationUseCase) {
+    public AlbumController(GetAlbumUseCase getAlbumUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1, ListAlbumUseCase listAlbumUseCase, AssociateArtistsToAlbumUseCase associateArtistsToAlbumUseCase, GetAssociationUseCase getAssociationUseCase, SaveFotosUseCase saveFotosUseCase) {
         this.getAlbumUseCase = getAlbumUseCase;
         this.saveAlbumUseCase = saveAlbumUseCase;
         this.updateArtistaUseCase = updateArtistaUseCase1;
         this.listAlbumUseCase = listAlbumUseCase;
         this.associateArtistsToAlbumUseCase = associateArtistsToAlbumUseCase;
         this.getAssociationUseCase = getAssociationUseCase;
+        this.saveFotosUseCase = saveFotosUseCase;
     }
 
     @Operation(summary = "Buscar album por id",
@@ -107,7 +109,6 @@ public class AlbumController {
     })
     @GetMapping(value = "/{id}/associacoes")
     public ResponseEntity<AssociationResponse> getAssociacoes(@PathVariable Integer id){
-        this.id = id;
         Album album = getAlbumUseCase.findAlbumById(id);
         List<ArtistaDTO> artistasAssociados = getAssociationUseCase.getAssociacaoById(id)
                 .stream().map(ArtistaDTOMapper::toDto).toList();
@@ -161,9 +162,10 @@ public class AlbumController {
             tags = "Album")
     @ApiResponse(responseCode = "201", description = "Fotos salvas")
     @PostMapping(value = "/{idAlbum}/fotos")
-    public ResponseEntity<Album> saveFotosAlbum( @PathVariable Long id,
+    public ResponseEntity<Album> saveFotosAlbum( @PathVariable Integer id,
                                                  @RequestParam("fotos") List<MultipartFile> fotos){
-
+        saveFotosUseCase.salvarFotosAlbum(id,fotos);
+        return ResponseEntity.noContent().build();
     }
 
 

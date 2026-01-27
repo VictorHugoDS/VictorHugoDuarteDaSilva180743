@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class Foto {
     Integer id;
+    String nomeIdentificacao;
     String nome;
     String url;
     Album album;

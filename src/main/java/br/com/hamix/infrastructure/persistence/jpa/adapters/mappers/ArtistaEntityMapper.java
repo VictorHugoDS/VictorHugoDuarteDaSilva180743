@@ -1,7 +1,6 @@
-package br.com.hamix.infrastructure.gateways.mappers;
+package br.com.hamix.infrastructure.persistence.jpa.adapters.mappers;
 
 
-import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
 import br.com.hamix.infrastructure.persistence.jpa.ArtistaEntity;
@@ -9,7 +8,6 @@ import br.com.hamix.infrastructure.persistence.jpa.ArtistaEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ArtistaEntityMapper {
     public static ArtistaEntity toEntity(Artista domain){

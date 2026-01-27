@@ -1,4 +1,4 @@
-package br.com.hamix.infrastructure.gateways.mappers;
+package br.com.hamix.infrastructure.persistence.jpa.adapters.mappers;
 
 import br.com.hamix.domain.pagination.PaginationRequest;
 import org.springframework.data.domain.PageRequest;

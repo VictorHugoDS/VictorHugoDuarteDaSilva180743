@@ -1,16 +1,18 @@
-package br.com.hamix.infrastructure.gateways;
+package br.com.hamix.infrastructure.persistence.jpa.adapters;
 
 import br.com.hamix.config.exception.custom.DatabaseException;
 import br.com.hamix.domain.model.Foto;
-import br.com.hamix.infrastructure.gateways.mappers.FotoEntityMapper;
+import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.FotoEntityMapper;
 import br.com.hamix.infrastructure.persistence.jpa.FotoEntity;
 import br.com.hamix.infrastructure.persistence.jpa.FotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FotoRepositoryGateway implements br.com.hamix.domain.gateway.FotoGateway {
+@Service
+public class FotoRepositoryAdapter implements br.com.hamix.domain.gateway.FotoGateway {
 
     @Autowired
     FotoRepository repository;

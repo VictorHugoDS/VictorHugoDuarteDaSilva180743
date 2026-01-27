@@ -3,6 +3,7 @@ package br.com.hamix.config.exception;
 import br.com.hamix.config.exception.custom.ConversionException;
 import br.com.hamix.config.exception.custom.DataNotFoundedException;
 import br.com.hamix.config.exception.custom.DatabaseException;
+import br.com.hamix.config.exception.custom.StorageException;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,13 @@ public class GlobalExceptionHandler {
         log.error("Erro inesperado", ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Erro na conversão: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<String> handleStorageException(StorageException ex) {
+        log.error("Erro inesperado", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Erro no serviço de Storage: " + ex.getMessage());
     }
 
     @ExceptionHandler(DataNotFoundedException.class)

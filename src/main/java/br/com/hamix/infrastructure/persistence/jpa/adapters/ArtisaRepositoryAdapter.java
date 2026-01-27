@@ -1,12 +1,12 @@
-package br.com.hamix.infrastructure.gateways;
+package br.com.hamix.infrastructure.persistence.jpa.adapters;
 
 import br.com.hamix.config.exception.custom.DataNotFoundedException;
 import br.com.hamix.config.exception.custom.DatabaseException;
 import br.com.hamix.domain.gateway.ArtistaGateway;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
-import br.com.hamix.infrastructure.gateways.mappers.ArtistaEntityMapper;
-import br.com.hamix.infrastructure.gateways.mappers.PaginationMapper;
+import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.ArtistaEntityMapper;
+import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.PaginationMapper;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumRepository;
 import br.com.hamix.infrastructure.persistence.jpa.ArtistaEntity;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ArtisaRepositoryGateway implements ArtistaGateway {
+public class ArtisaRepositoryAdapter implements ArtistaGateway {
 
     @Autowired
     ArtistaRepository artistaRepository;

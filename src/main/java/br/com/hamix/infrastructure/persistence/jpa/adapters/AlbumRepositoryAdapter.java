@@ -1,4 +1,4 @@
-package br.com.hamix.infrastructure.gateways;
+package br.com.hamix.infrastructure.persistence.jpa.adapters;
 
 import br.com.hamix.config.exception.custom.DataNotFoundedException;
 import br.com.hamix.config.exception.custom.DatabaseException;
@@ -6,9 +6,9 @@ import br.com.hamix.domain.gateway.AlbumGateway;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
-import br.com.hamix.infrastructure.gateways.mappers.AlbumEntityMapper;
-import br.com.hamix.infrastructure.gateways.mappers.ArtistaEntityMapper;
-import br.com.hamix.infrastructure.gateways.mappers.PaginationMapper;
+import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.AlbumEntityMapper;
+import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.ArtistaEntityMapper;
+import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.PaginationMapper;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumRepository;
 import br.com.hamix.infrastructure.persistence.jpa.ArtistaEntity;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AlbumRepositoryGateway implements AlbumGateway {
+public class AlbumRepositoryAdapter implements AlbumGateway {
     @Autowired
     private AlbumRepository albumRepository;
 
