@@ -36,7 +36,7 @@ public class FotoStorageAdapter implements FotoStorageGateway {
         try {
             String nomeArquivo  = file.getOriginalFilename();
             String nomeIdentificacaoFoto = UUID.randomUUID() + "-" + nomeArquivo;
-            ObjectWriteResponse response = client.putObject(
+            client.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucket)
                             .object(nomeIdentificacaoFoto)
@@ -54,9 +54,9 @@ public class FotoStorageAdapter implements FotoStorageGateway {
     }
 
     @Override
-    public String recuperarLinksFotos(Foto foto) {
+    public Foto recuperarLinkFoto(Foto foto) {
         try {
-            return client.getPresignedObjectUrl(
+            String link =  client.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
                             .bucket(bucket)
@@ -64,6 +64,8 @@ public class FotoStorageAdapter implements FotoStorageGateway {
                             .expiry(Integer.parseInt(expirationTime))
                             .build()
             );
+            foto.setUrl(link);
+            return foto;
         } catch (Exception e){
             throw new StorageException("Erro ao recuperar url da foto",e);
         }

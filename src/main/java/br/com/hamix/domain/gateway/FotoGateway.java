@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FotoGateway {
     Foto save(Foto foto);
-    List<Foto> findAllByIds(List<Integer> ids);
+    List<Foto> findByAlbum(Album album);
 }

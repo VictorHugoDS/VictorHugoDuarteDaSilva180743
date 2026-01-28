@@ -24,7 +24,7 @@ public class FotoEntity {
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn(name = "alb_id", nullable = false)
     private AlbumEntity album;
 
 

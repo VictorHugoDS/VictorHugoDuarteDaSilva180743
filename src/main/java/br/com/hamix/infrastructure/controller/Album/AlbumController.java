@@ -7,12 +7,14 @@ import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.domain.pagination.PaginationResponse;
 import br.com.hamix.infrastructure.controller.Album.dto.ArtistaDTO;
 import br.com.hamix.infrastructure.controller.Album.dto.AssociationResponse;
+import br.com.hamix.infrastructure.controller.Album.dto.FotoResponse;
 import br.com.hamix.infrastructure.controller.Album.dto.SaveAlbumRequest;
 import br.com.hamix.infrastructure.controller.Album.mapper.ArtistaDTOMapper;
 import br.com.hamix.infrastructure.controller.Album.mapper.SaveAlbumDTOMapper;
 import br.com.hamix.usecase.album.associate.AssociateArtistsToAlbumUseCase;
 import br.com.hamix.usecase.album.getAssociation.GetAssociationUseCase;
 import br.com.hamix.usecase.album.list.ListAlbumUseCase;
+import br.com.hamix.usecase.album.recuperarFotos.RecuperarFotosUseCase;
 import br.com.hamix.usecase.album.save.SaveAlbumUseCase;
 import br.com.hamix.usecase.album.get.GetAlbumUseCase;
 import br.com.hamix.usecase.album.savefoto.SaveFotosUseCase;
@@ -40,8 +42,9 @@ public class AlbumController {
     private final AssociateArtistsToAlbumUseCase associateArtistsToAlbumUseCase;
     private final GetAssociationUseCase getAssociationUseCase;
     private final SaveFotosUseCase saveFotosUseCase;
+    private final RecuperarFotosUseCase recuperarFotosUseCase;
 
-    public AlbumController(GetAlbumUseCase getAlbumUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1, ListAlbumUseCase listAlbumUseCase, AssociateArtistsToAlbumUseCase associateArtistsToAlbumUseCase, GetAssociationUseCase getAssociationUseCase, SaveFotosUseCase saveFotosUseCase) {
+    public AlbumController(GetAlbumUseCase getAlbumUseCase, SaveAlbumUseCase saveAlbumUseCase, UpdateArtistaUseCase updateArtistaUseCase, UpdateAlbumUseCase updateArtistaUseCase1, ListAlbumUseCase listAlbumUseCase, AssociateArtistsToAlbumUseCase associateArtistsToAlbumUseCase, GetAssociationUseCase getAssociationUseCase, SaveFotosUseCase saveFotosUseCase, RecuperarFotosUseCase recuperarFotosUseCase) {
         this.getAlbumUseCase = getAlbumUseCase;
         this.saveAlbumUseCase = saveAlbumUseCase;
         this.updateArtistaUseCase = updateArtistaUseCase1;
@@ -49,6 +52,7 @@ public class AlbumController {
         this.associateArtistsToAlbumUseCase = associateArtistsToAlbumUseCase;
         this.getAssociationUseCase = getAssociationUseCase;
         this.saveFotosUseCase = saveFotosUseCase;
+        this.recuperarFotosUseCase = recuperarFotosUseCase;
     }
 
     @Operation(summary = "Buscar album por id",
@@ -98,28 +102,7 @@ public class AlbumController {
     }
 
 
-    @Operation(summary = "Buscar Associação de álbum com artistas",
-            description = "Recupera uma lista de associação dos artistas de um determinado álbum",
-            tags = "Album")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Album Encontrado com sucesso"),
-            @ApiResponse(responseCode = "400",description = "Erro ao ler os dados de entrada"),
-            @ApiResponse(responseCode = "404",description = "Não foi possível encontrar a entidade com os dados passados"),
-            @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
-    })
-    @GetMapping(value = "/{id}/associacoes")
-    public ResponseEntity<AssociationResponse> getAssociacoes(@PathVariable Integer id){
-        Album album = getAlbumUseCase.findAlbumById(id);
-        List<ArtistaDTO> artistasAssociados = getAssociationUseCase.getAssociacaoById(id)
-                .stream().map(ArtistaDTOMapper::toDto).toList();
-        AssociationResponse response = AssociationResponse.builder()
-                .nome(album.getNome())
-                .ano(album.getAno())
-                .artistas(artistasAssociados)
-                .build();
-        return ResponseEntity.ok(response);
 
-    }
 
     @Operation(summary = "Salvar album",
             description = "Salva os dados do album e retorna seus dados criados",
@@ -157,17 +140,28 @@ public class AlbumController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Salvar fotos de um album",
-            description = "Salva as fotos de um album",
+    @Operation(summary = "Buscar Associação de álbum com artistas",
+            description = "Recupera uma lista de associação dos artistas de um determinado álbum",
             tags = "Album")
-    @ApiResponse(responseCode = "201", description = "Fotos salvas")
-    @PostMapping(value = "/{idAlbum}/fotos")
-    public ResponseEntity<Album> saveFotosAlbum( @PathVariable Integer id,
-                                                 @RequestParam("fotos") List<MultipartFile> fotos){
-        saveFotosUseCase.salvarFotosAlbum(id,fotos);
-        return ResponseEntity.noContent().build();
-    }
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Album Encontrado com sucesso"),
+            @ApiResponse(responseCode = "400",description = "Erro ao ler os dados de entrada"),
+            @ApiResponse(responseCode = "404",description = "Não foi possível encontrar a entidade com os dados passados"),
+            @ApiResponse(responseCode = "500",description = "Erro ao realizar a solicitação")
+    })
+    @GetMapping(value = "/{id}/associacoes")
+    public ResponseEntity<AssociationResponse> getAssociacoes(@PathVariable Integer id){
+        Album album = getAlbumUseCase.findAlbumById(id);
+        List<ArtistaDTO> artistasAssociados = getAssociationUseCase.getAssociacaoById(id)
+                .stream().map(ArtistaDTOMapper::toDto).toList();
+        AssociationResponse response = AssociationResponse.builder()
+                .nome(album.getNome())
+                .ano(album.getAno())
+                .artistas(artistasAssociados)
+                .build();
+        return ResponseEntity.ok(response);
 
+    }
 
     @Operation(summary = "Atualizar album",
             description = "Atualiza os dados do album e retorna seus dados atualizados",
@@ -178,4 +172,34 @@ public class AlbumController {
         updateArtistaUseCase.updateAlbum(SaveAlbumDTOMapper.toDomain(request), Integer.valueOf(id));
         return ResponseEntity.noContent().build();
     }
+
+
+    @Operation(summary = "Salvar fotos de um album",
+            description = "Salva as fotos de um album",
+            tags = "Album")
+    @ApiResponse(responseCode = "201", description = "Fotos salvas")
+    @PostMapping(value = "/{idAlbum}/fotos")
+    public ResponseEntity<Album> saveFotosAlbum( @PathVariable Integer idAlbum,
+                                                 @RequestParam("fotos") List<MultipartFile> fotos){
+        saveFotosUseCase.salvarFotosAlbum(idAlbum,fotos);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Recuperar url das fotos de um album",
+            description = "Recupera uma lista de urls das fotos do respectivo album",
+            tags = "Album")
+    @ApiResponse(responseCode = "200", description = "Url das fotos recuperadas com sucesso")
+    @GetMapping(value = "/{idAlbum}/fotos")
+    public ResponseEntity<List<FotoResponse>> saveFotosAlbum(@PathVariable Integer idAlbum){
+        List<FotoResponse> response = recuperarFotosUseCase.recuperarFotosDeAlbum(idAlbum)
+                .stream().map(foto -> FotoResponse
+                        .builder()
+                        .id(foto.getId())
+                        .nome(foto.getNome())
+                        .url(foto.getUrl())
+                        .build())
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FotoStorageGateway {
     Foto uploadFoto(MultipartFile file);
-    String recuperarLinksFotos(Foto foto);
+    Foto recuperarLinkFoto(Foto foto);
 }

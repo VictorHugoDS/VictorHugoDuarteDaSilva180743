@@ -1,7 +1,11 @@
 package br.com.hamix.infrastructure.persistence.jpa.adapters;
 
 import br.com.hamix.config.exception.custom.DatabaseException;
+import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.model.Foto;
+import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
+import br.com.hamix.infrastructure.persistence.jpa.AlbumRepository;
+import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.AlbumEntityMapper;
 import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.FotoEntityMapper;
 import br.com.hamix.infrastructure.persistence.jpa.FotoEntity;
 import br.com.hamix.infrastructure.persistence.jpa.FotoRepository;
@@ -17,6 +21,7 @@ public class FotoRepositoryAdapter implements br.com.hamix.domain.gateway.FotoGa
     @Autowired
     FotoRepository repository;
 
+
     @Override
     public Foto save(Foto foto) {
         FotoEntity entity = FotoEntityMapper.toEntity(foto);
@@ -29,12 +34,11 @@ public class FotoRepositoryAdapter implements br.com.hamix.domain.gateway.FotoGa
     }
 
     @Override
-    public List<Foto> findAllByIds(List<Integer> ids) {
-        try {
-            return repository.findAllById(ids).stream()
-                    .map(FotoEntityMapper::toDomain).collect(Collectors.toList());
-        } catch (DatabaseException e) {
-            throw new RuntimeException("Ocorreu um erro ao recuperar as entidades",e);
-        }
+    public List<Foto> findByAlbum(Album album) {
+        AlbumEntity albumEntity = AlbumEntityMapper.toEntity(album);
+        List<FotoEntity> fotoEntities = repository.findByAlbum(albumEntity);
+        return fotoEntities.stream().map(FotoEntityMapper::toDomain).collect(Collectors.toList());
     }
+
+
 }
