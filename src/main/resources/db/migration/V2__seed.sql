@@ -60,7 +60,7 @@ INSERT INTO public.artista (art_nome, art_origem) VALUES ('Rita Lee', 'Brasil');
 INSERT INTO public.album (alb_nome,alb_ano) VALUES
 ('Flerte Fatal','1987'),
 ('Aqui, Ali, em Qualquer Lugar','2000/2001'),
-('Multishow ao Vivo: Rita Lee','22 de Maio de 2009');
+('Multishow ao Vivo: Rita Lee','2009-05-22');
 
 INSERT INTO public.artista_album (art_id, alb_id)
 SELECT a.art_id, b.alb_id FROM public.artista a, public.album b
@@ -73,8 +73,8 @@ INSERT INTO public.artista (art_nome, art_origem) VALUES ('Amy Winehouse', 'Ingl
 
 INSERT INTO public.album (alb_nome,alb_ano) VALUES
 ('Frank',''),
-('Back to Black','27 de outubro de 2006');
+('Back to Black','2006-10-27');
 
 INSERT INTO public.artista_album (art_id, alb_id)
 SELECT a.art_id, b.alb_id FROM public.artista a, public.album b
-WHERE a.art_nome = 'Rita Lee' AND b.alb_nome IN ('Frank','Back to Black');
+WHERE a.art_nome = 'Amy Winehouse' AND b.alb_nome IN ('Frank','Back to Black');

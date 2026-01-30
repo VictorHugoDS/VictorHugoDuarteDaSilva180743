@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com</groupId>
 	<artifactId>hamix</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<name>hamix</name>
 	<description>Projeto de armazenagem das informações de artistas e seus respectivos álbuns </description>
 	<url/>
@@ -66,6 +66,10 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.minio</groupId>
