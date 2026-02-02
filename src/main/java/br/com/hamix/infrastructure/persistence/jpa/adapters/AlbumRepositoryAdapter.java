@@ -71,8 +71,6 @@ public class AlbumRepositoryAdapter implements AlbumGateway {
     public Album associateArtistas(Integer idAlbum, List<Artista> artistasList) {
         AlbumEntity entity = albumRepository.findById(idAlbum)
                 .orElseThrow(() -> new DataNotFoundedException("Não foi possível encontrar o álbum"));
-
-
         List<ArtistaEntity> artistaEntityList = artistasList.stream()
                 .map(ArtistaEntityMapper::toEntity).collect(Collectors.toList()); ;
         entity.setArtistas(artistaEntityList);

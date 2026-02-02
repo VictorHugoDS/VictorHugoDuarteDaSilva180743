@@ -15,40 +15,4 @@ import java.util.List;
 @Configuration(proxyBeanMethods = false)
 public class FlywayBootstrapConfig {
 
-    @Bean
-    @ConditionalOnMissingBean(Flyway.class)
-    public Flyway flyway(DataSource dataSource) {
-        return Flyway.configure()
-                .dataSource(dataSource)
-                .locations("classpath:db/migration")
-                .baselineOnMigrate(true)
-                .schemas("public")
-                .defaultSchema("public")
-                .load();
-    }
-
-    @Bean
-    public Object flywayMigrator(Flyway flyway) {
-        flyway.migrate();
-        return new Object();
-    }
-
-    @Bean
-    public static BeanFactoryPostProcessor flywayDependencyPostProcessor() {
-        return beanFactory -> {
-            if (!beanFactory.containsBeanDefinition("entityManagerFactory")) {
-                return;
-            }
-            BeanDefinition entityManagerFactory = beanFactory.getBeanDefinition("entityManagerFactory");
-            String[] dependsOn = entityManagerFactory.getDependsOn();
-            List<String> updated = new ArrayList<>();
-            if (dependsOn != null) {
-                updated.addAll(Arrays.asList(dependsOn));
-            }
-            if (!updated.contains("flywayMigrator")) {
-                updated.add("flywayMigrator");
-            }
-            entityManagerFactory.setDependsOn(updated.toArray(new String[0]));
-        };
-    }
 }

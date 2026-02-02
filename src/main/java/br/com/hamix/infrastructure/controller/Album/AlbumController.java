@@ -178,18 +178,20 @@ public class AlbumController {
             description = "Salva as fotos de um album",
             tags = "Album")
     @ApiResponse(responseCode = "201", description = "Fotos salvas")
-    @PostMapping(value = "/{idAlbum}/fotos")
-    public ResponseEntity<Album> saveFotosAlbum( @PathVariable Integer idAlbum,
-                                                 @RequestParam("fotos") List<MultipartFile> fotos){
-        saveFotosUseCase.salvarFotosAlbum(idAlbum,fotos);
+    @PostMapping(value = "/{idAlbum}/fotos", consumes = {"multipart/form-data"})
+    public ResponseEntity<Void> saveFotosAlbum(
+            @PathVariable Integer idAlbum,
+            @RequestPart("fotos") List<MultipartFile> fotos) {
+        saveFotosUseCase.salvarFotosAlbum(idAlbum, fotos);
         return ResponseEntity.noContent().build();
     }
+
 
     @Operation(summary = "Recuperar url das fotos de um album",
             description = "Recupera uma lista de urls das fotos do respectivo album",
             tags = "Album")
     @ApiResponse(responseCode = "200", description = "Url das fotos recuperadas com sucesso")
-    @GetMapping(value = "/{idAlbum}/fotos")
+    @GetMapping(value = "/{idAlbum}/fotos", produces = {"multipart/form-data"})
     public ResponseEntity<List<FotoResponse>> saveFotosAlbum(@PathVariable Integer idAlbum){
         List<FotoResponse> response = recuperarFotosUseCase.recuperarFotosDeAlbum(idAlbum)
                 .stream().map(foto -> FotoResponse
