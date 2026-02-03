@@ -1,4 +1,4 @@
-package br.com.hamix.config.security;
+package br.com.hamix.config.security.jwt;
 
 import br.com.hamix.infrastructure.persistence.jpa.UserAccountEntity;
 import br.com.hamix.infrastructure.persistence.jpa.UserAccountRepository;

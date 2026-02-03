@@ -1,6 +1,6 @@
 package br.com.hamix.infrastructure.controller.auth;
 
-import br.com.hamix.config.security.JwtService;
+import br.com.hamix.config.security.jwt.JwtService;
 import br.com.hamix.infrastructure.controller.auth.dto.LoginRequest;
 import br.com.hamix.infrastructure.controller.auth.dto.RegisterRequest;
 import br.com.hamix.infrastructure.controller.auth.dto.RegisterResponse;

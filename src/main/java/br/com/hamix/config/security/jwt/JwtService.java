@@ -1,4 +1,4 @@
-package br.com.hamix.config.security;
+package br.com.hamix.config.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

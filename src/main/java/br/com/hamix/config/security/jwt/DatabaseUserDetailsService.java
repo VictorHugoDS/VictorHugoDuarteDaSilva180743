@@ -1,4 +1,4 @@
-package br.com.hamix.config.security;
+package br.com.hamix.config.security.jwt;
 
 import br.com.hamix.infrastructure.persistence.jpa.UserAccountRepository;
 import org.springframework.security.core.authority.AuthorityUtils;

@@ -1,4 +1,4 @@
-package br.com.hamix.config.security;
+package br.com.hamix.config.security.jwt;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
