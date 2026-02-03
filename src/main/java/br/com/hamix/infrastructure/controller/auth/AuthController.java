@@ -9,6 +9,10 @@ import br.com.hamix.infrastructure.controller.auth.dto.TokenResponse;
 import br.com.hamix.infrastructure.persistence.jpa.UserAccountEntity;
 import br.com.hamix.infrastructure.persistence.jpa.UserAccountRepository;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Autenticação", description = "Endpoints de autenticação e renovação de tokens")
 public class AuthController {
 
 	private final AuthenticationManager authenticationManager;
@@ -49,6 +54,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
+	@Operation(summary = "Registrar usuário", description = "Cria um usuário com role padrão ROLE_USER.")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Usuário criado"),
+			@ApiResponse(responseCode = "409", description = "Usuário já existe"),
+			@ApiResponse(responseCode = "400", description = "Dados inválidos")
+	})
 	public RegisterResponse register(@Valid @RequestBody RegisterRequest request) {
 		userAccountRepository.findByUsername(request.username()).ifPresent(user -> {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuario ja existe");
@@ -66,6 +77,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
+	@Operation(summary = "Login", description = "Autentica e retorna access e refresh tokens.")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Login realizado"),
+			@ApiResponse(responseCode = "401", description = "Credenciais inválidas"),
+			@ApiResponse(responseCode = "400", description = "Dados inválidos")
+	})
 	public TokenResponse login(@Valid @RequestBody LoginRequest request) {
 		var authToken = new UsernamePasswordAuthenticationToken(request.username(), request.password());
 		authenticationManager.authenticate(authToken);
@@ -78,6 +95,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/refresh")
+	@Operation(summary = "Renovar token", description = "Gera novos tokens a partir do refresh token.")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Tokens renovados"),
+			@ApiResponse(responseCode = "401", description = "Refresh token inválido"),
+			@ApiResponse(responseCode = "400", description = "Dados inválidos")
+	})
 	public TokenResponse refresh(@Valid @RequestBody RefreshRequest request) {
 		String refreshToken = request.refreshToken();
 		String username;

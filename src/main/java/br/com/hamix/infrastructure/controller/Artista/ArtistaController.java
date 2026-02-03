@@ -14,6 +14,7 @@ import br.com.hamix.usecase.artista.update.UpdateArtistaUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("artista")
+@Tag(name = "Artista", description = "Endpoints de cadastro e consulta de artistas")
 public class ArtistaController {
 
     private final GetArtistaPorIdUseCase getArtistaPorIdUseCase;

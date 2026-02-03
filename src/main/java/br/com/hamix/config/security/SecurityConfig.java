@@ -28,6 +28,11 @@ public class SecurityConfig {
 			"/swagger-ui.html",
 			"/v3/api-docs/**"
 	);
+	private static final List<String> ACTUATOR_WHITELIST = List.of(
+			"/actuator/health",
+			"/actuator/health/**",
+			"/actuator/info"
+	);
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -68,6 +73,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/auth/**").permitAll()
 						.requestMatchers(SWAGGER_WHITELIST.toArray(new String[0])).permitAll()
+						.requestMatchers(ACTUATOR_WHITELIST.toArray(new String[0])).permitAll()
 						.anyRequest().authenticated()
 				)
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
