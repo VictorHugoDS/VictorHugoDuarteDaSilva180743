@@ -28,8 +28,8 @@ public class FotoRepositoryAdapter implements br.com.hamix.domain.gateway.FotoGa
         try{
             FotoEntity savedEntity = repository.save(entity);
             return FotoEntityMapper.toDomain(savedEntity);
-        } catch (DatabaseException e) {
-            throw new RuntimeException("Ocorreu um erro ao salvar a entidade",e);
+        } catch (Exception e) {
+            throw new DatabaseException("Ocorreu um erro ao salvar a entidade",e);
         }
     }
 

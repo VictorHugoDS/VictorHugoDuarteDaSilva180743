@@ -12,6 +12,7 @@ import br.com.hamix.infrastructure.persistence.jpa.adapters.mappers.PaginationMa
 import br.com.hamix.infrastructure.persistence.jpa.AlbumEntity;
 import br.com.hamix.infrastructure.persistence.jpa.AlbumRepository;
 import br.com.hamix.infrastructure.persistence.jpa.ArtistaEntity;
+import br.com.hamix.infrastructure.persistence.jpa.ArtistaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -19,13 +20,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AlbumRepositoryAdapter implements AlbumGateway {
     @Autowired
     private AlbumRepository albumRepository;
+    @Autowired
+    private ArtistaRepository artistaRepository;
 
 
     @Override
@@ -71,12 +74,26 @@ public class AlbumRepositoryAdapter implements AlbumGateway {
     public Album associateArtistas(Integer idAlbum, List<Artista> artistasList) {
         AlbumEntity entity = albumRepository.findById(idAlbum)
                 .orElseThrow(() -> new DataNotFoundedException("Não foi possível encontrar o álbum"));
-        List<ArtistaEntity> artistaEntityList = artistasList.stream()
-                .map(ArtistaEntityMapper::toEntity).collect(Collectors.toList()); ;
-        entity.setArtistas(artistaEntityList);
         try {
-            AlbumEntity savedEntity = albumRepository.save(entity);
-            return AlbumEntityMapper.toDomain(savedEntity);
+            List<Integer> artistIds = artistasList.stream()
+                    .map(Artista::getId)
+                    .toList();
+            List<ArtistaEntity> artistaEntityList = artistaRepository.findAllById(artistIds);
+            for (ArtistaEntity artistaEntity : artistaEntityList) {
+                List<AlbumEntity> albuns = artistaEntity.getAlbuns();
+                if (albuns == null) {
+                    albuns = new ArrayList<>();
+                }
+                boolean albumJaLinkado = albuns.stream()
+                        .anyMatch(album -> album.getId().equals(entity.getId()));
+                if (!albumJaLinkado) {
+                    albuns.add(entity);
+                }
+                artistaEntity.setAlbuns(albuns);
+            }
+            artistaRepository.saveAll(artistaEntityList);
+            entity.setArtistas(artistaEntityList);
+            return AlbumEntityMapper.toDomain(entity);
         } catch (DatabaseException e) {
             throw new RuntimeException("Ocorreu um erro ao salvar a entidade",e);
         }

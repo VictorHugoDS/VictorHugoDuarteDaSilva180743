@@ -13,6 +13,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 
 @RestControllerAdvice
@@ -61,6 +62,13 @@ public class GlobalExceptionHandler {
         log.error("Requisição mal formatada", ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Não foi possível fazer a leitura dos dados passados ");
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<String> handleDataNotFoundedException(MaxUploadSizeExceededException ex) {
+        log.error("Imagem ultrapassou o limite de tamanho", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("A imagem ultrapassou o limite de tamanho ");
     }
 
     @ExceptionHandler(Exception.class)
