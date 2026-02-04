@@ -101,6 +101,16 @@ docker compose up -d --build
 Se o padrão do `.env.example` for utilizado, o username e password serão
 **senha**.
 
+## 📍 Endpoints de regionais
+
+Os endpoints de regionais permitem sincronizar registros em lote e consultar
+regionais com paginação e filtro por nome.
+
+- `POST /hamix/api/v1/regionais/atualizar` — sincroniza a lista enviada e
+  atualiza o que não foi informado.
+- `GET /hamix/api/v1/regionais/list` — lista com paginação e filtro por `name`.
+  Parâmetros: `page`, `size`, `sortBy`, `sortDir`, `name`.
+
 ## 🩺 Health Checks
 
 - `GET /hamix/api/v1/actuator/health`
@@ -109,6 +119,9 @@ Se o padrão do `.env.example` for utilizado, o username e password serão
 
 ## 🧪 Testes
 ### Com Docker
+
+Não é necessário ter Maven instalado localmente para executar os testes,
+porque o comando é executado dentro do container da aplicação.
 
 1. Suba as dependências:
 
