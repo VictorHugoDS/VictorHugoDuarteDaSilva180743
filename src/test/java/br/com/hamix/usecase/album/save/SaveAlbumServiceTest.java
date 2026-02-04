@@ -1,6 +1,7 @@
 package br.com.hamix.usecase.album.save;
 
 import br.com.hamix.domain.gateway.AlbumGateway;
+import br.com.hamix.domain.gateway.AlbumNotificationGateway;
 import br.com.hamix.domain.model.Album;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,8 @@ class SaveAlbumServiceTest {
 	@Test
 	void salvarAlbum_delegatesToGateway() {
 		AlbumGateway gateway = mock(AlbumGateway.class);
-		SaveAlbumService service = new SaveAlbumService(gateway);
+		AlbumNotificationGateway albumNotificationGateway = mock(AlbumNotificationGateway.class);
+		SaveAlbumService service = new SaveAlbumService(gateway,albumNotificationGateway);
 		Album album = new Album(null, "Hybrid Theory", "2000");
 		when(gateway.save(album)).thenReturn(album);
 

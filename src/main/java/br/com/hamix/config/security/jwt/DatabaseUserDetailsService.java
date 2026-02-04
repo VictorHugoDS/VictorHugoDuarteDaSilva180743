@@ -1,5 +1,6 @@
 package br.com.hamix.config.security.jwt;
 
+import br.com.hamix.config.exception.custom.DatabaseException;
 import br.com.hamix.infrastructure.persistence.jpa.UserAccountRepository;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -20,7 +21,7 @@ public class DatabaseUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		var user = userAccountRepository.findByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado"));
+				.orElseThrow(() -> new DatabaseException("Usuario nao encontrado"));
 
 		return new User(
 				user.getUsername(),
