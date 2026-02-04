@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -35,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(StorageException.class)
     public ResponseEntity<String> handleStorageException(StorageException ex) {
         log.error("Erro inesperado", ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Erro no serviço de Storage: " + ex.getMessage());
     }
 
@@ -44,6 +47,20 @@ public class GlobalExceptionHandler {
         log.error("Erro inesperado", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Não foi possível encontrar a entidade com os dados passados: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public ResponseEntity<String> handleDataNotFoundedException(InternalAuthenticationServiceException ex) {
+        log.error("Usuário não encontrado", ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Não foi possível encontrar o usuário");
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleDataNotFoundedException(HttpMessageNotReadableException ex) {
+        log.error("Requisição mal formatada", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível fazer a leitura dos dados passados ");
     }
 
     @ExceptionHandler(Exception.class)
