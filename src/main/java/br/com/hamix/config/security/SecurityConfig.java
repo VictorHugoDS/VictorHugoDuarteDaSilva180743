@@ -33,6 +33,9 @@ public class SecurityConfig {
 			"/actuator/health/**",
 			"/actuator/info"
 	);
+	private static final List<String> WEBSOCKET_WHITELIST = List.of(
+			"/ws/**"
+	);
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -74,6 +77,7 @@ public class SecurityConfig {
 						.requestMatchers("/auth/**").permitAll()
 						.requestMatchers(SWAGGER_WHITELIST.toArray(new String[0])).permitAll()
 						.requestMatchers(ACTUATOR_WHITELIST.toArray(new String[0])).permitAll()
+						.requestMatchers(WEBSOCKET_WHITELIST.toArray(new String[0])).permitAll()
 						.anyRequest().authenticated()
 				)
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
