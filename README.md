@@ -31,9 +31,9 @@ Ao longo de todo o processo, cada decisão foi tomada com a marca Hamix como eix
 
 ## 📌 Visão Geral
 
-O **Hamix** é uma API desenvolvida para gerenciar informações de artistas e seus álbuns, incluindo o armazenamento e a consulta de dados e imagens.  
+O **Hamix** é uma API desenvolvida para gerir informações de artistas, seus álbuns e regionais, incluindo o armazenamento e a consulta de dados e imagens.  
 
-Seu objetivo é oferecer uma base sólida para aplicações que precisem organizar e disponibilizar conteúdos musicais de forma estruturada e acessível.
+O seu objetivo é oferecer uma base sólida para aplicações que precisem organizar e disponibilizar conteúdos musicais de forma estruturada e acessível.
 
 
 ## 🛠️ Tecnologias
@@ -58,7 +58,7 @@ As configurações sensíveis e variáveis por ambiente ficam no arquivo `.env`.
 1. Copie o arquivo de exemplo:
 
 ```
-copy .env.example .env
+.env.example .env
 ```
 
 2. Ajuste os valores conforme seu ambiente.
@@ -98,6 +98,9 @@ docker compose up -d --build
 
 > Use o botão **Authorize** no Swagger com `Bearer <token>`.
 
+Se o padrão do `.env.example` for utilizado, o username e password serão
+**senha**.
+
 ## 🩺 Health Checks
 
 - `GET /hamix/api/v1/actuator/health`
@@ -105,9 +108,18 @@ docker compose up -d --build
 - `GET /hamix/api/v1/actuator/health/readiness`
 
 ## 🧪 Testes
+### Com Docker
+
+1. Suba as dependências:
 
 ```
-./mvnw -DskipTests=false test
+docker compose up -d postgres minio
+```
+
+2. Execute os testes no container da aplicação:
+
+```
+docker compose run --rm app ./mvnw -DskipTests=false test
 ```
 
 ## 🗂️ Estrutura do projeto (resumo)
