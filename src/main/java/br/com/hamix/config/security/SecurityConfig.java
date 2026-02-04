@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import br.com.hamix.config.security.jwt.JwtAuthenticationFilter;
+import br.com.hamix.config.security.ratelimit.RateLimitFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -68,7 +69,8 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(
 			HttpSecurity http,
-			JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+			JwtAuthenticationFilter jwtAuthenticationFilter,
+			RateLimitFilter rateLimitFilter) throws Exception {
 		http
 				.cors(cors -> { })
 				.csrf(AbstractHttpConfigurer::disable)
@@ -80,7 +82,8 @@ public class SecurityConfig {
 						.requestMatchers(WEBSOCKET_WHITELIST.toArray(new String[0])).permitAll()
 						.anyRequest().authenticated()
 				)
-				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterAfter(rateLimitFilter, JwtAuthenticationFilter.class);
 
 		return http.build();
 	}
