@@ -26,28 +26,28 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDatabaseException(DatabaseException ex) {
         log.error("Erro inesperado", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro no banco: " + ex.getMessage());
+                .body("Ocorreu um erro conexão com o banco ");
     }
 
     @ExceptionHandler(ConversionException.class)
     public ResponseEntity<String> handleConversionException(ConversionException ex) {
         log.error("Erro inesperado", ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Erro na conversão: " + ex.getMessage());
+                .body("Ocorreu um erro na conversão de um campo da request");
     }
 
     @ExceptionHandler(StorageException.class)
     public ResponseEntity<String> handleStorageException(StorageException ex) {
         log.error("Erro inesperado", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro no serviço de Storage: " + ex.getMessage());
+                .body("Ocorreu um erro no serviço de armazenagem");
     }
 
     @ExceptionHandler(DataNotFoundedException.class)
     public ResponseEntity<String> handleDataNotFoundedException(ConversionException ex) {
         log.error("Erro inesperado", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("Não foi possível encontrar a entidade com os dados passados: " + ex.getMessage());
+                .body("Não foi possível encontrar a entidade com os dados passados");
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
@@ -75,9 +75,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGenericException(Exception ex) {
         log.error("Erro inesperado", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Ocorreu um erro inesperado, tente novamente mais tarde\n Erro:{" + ex.getMessage()+"}");
+                .body("Ocorreu um erro inesperado, tente novamente mais tarde");
     }
-
-
-
 }

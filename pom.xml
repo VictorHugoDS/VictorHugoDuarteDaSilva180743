@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com</groupId>
 	<artifactId>hamix</artifactId>
-	<version>0.0.11-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>hamix</name>
 	<description>Projeto de armazenagem das informações de artistas e seus respectivos álbuns </description>
 	<url/>

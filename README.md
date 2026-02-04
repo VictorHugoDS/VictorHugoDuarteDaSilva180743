@@ -47,9 +47,7 @@ O seu objetivo é oferecer uma base sólida para aplicações que precisem organ
 
 ## ✅ Requisitos
 
-- Java 21 (para rodar local)
-- Maven Wrapper (`./mvnw`)
-- Docker (para rodar via containers)
+- Docker
 
 ## ⚙️ Configuração
 
@@ -69,18 +67,15 @@ As configurações sensíveis e variáveis por ambiente ficam no arquivo `.env`.
 
 ### Com Docker (recomendado)
 
-```
+```shell
 docker compose up -d --build
 ```
 
 - Aplicação: `http://localhost:8081/hamix/api/v1`  
 - Swagger: `http://localhost:8081/hamix/api/v1/swagger-ui/index.html`
 
-### Local (sem Docker)
+Obs.: O perfil padrão das propriedades da aplicação é setado para produção.
 
-```
-./mvnw spring-boot:run
-```
 
 ## 🔐 Autenticação
 
@@ -108,8 +103,7 @@ regionais com paginação e filtro por nome.
 
 - `POST /hamix/api/v1/regionais/atualizar` — sincroniza a lista enviada e
   atualiza o que não foi informado.
-- `GET /hamix/api/v1/regionais/list` — lista com paginação e filtro por `name`.
-  Parâmetros: `page`, `size`, `sortBy`, `sortDir`, `name`.
+- `GET /hamix/api/v1/regionais/list` — lista com paginação e filtro dos Regionais.
 
 ## 🩺 Health Checks
 
@@ -118,20 +112,17 @@ regionais com paginação e filtro por nome.
 - `GET /hamix/api/v1/actuator/health/readiness`
 
 ## 🧪 Testes
-### Com Docker
+### No Docker
 
-Não é necessário ter Maven instalado localmente para executar os testes,
-porque o comando é executado dentro do container da aplicação.
+1. Suba as dependências caso elas não estejam ativas:
 
-1. Suba as dependências:
-
-```
+```shell
 docker compose up -d postgres minio
 ```
 
 2. Execute os testes no container da aplicação:
 
-```
+```shell
 docker compose run --rm app ./mvnw -DskipTests=false test
 ```
 
@@ -141,5 +132,13 @@ docker compose run --rm app ./mvnw -DskipTests=false test
 - `src/main/resources` — configurações e migrations
 - `src/test/java` — testes
 
- **Obs.:** A imagem utilizada neste README foi gerada com auxílio de ferramentas de inteligência artificial, servindo apenas como recurso ilustrativo. Todo o código, lógica e desenvolvimento do sistema são integralmente autorais.
+## ⚠️ Observações
+
+1. Caso a aplicação não suba, basta subir ela separadamente.
+```shell
+docker compose up app
+```
+
+2. A imagem utilizada neste README foi gerada com auxílio de ferramentas de inteligência artificial, 
+servindo apenas como recurso ilustrativo. Todo o código, lógica e desenvolvimento do sistema são integralmente autorais.
 
