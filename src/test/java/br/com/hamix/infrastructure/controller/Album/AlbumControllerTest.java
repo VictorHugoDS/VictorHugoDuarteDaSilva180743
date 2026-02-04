@@ -205,6 +205,5 @@ class AlbumControllerTest {
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).isNotNull();
-		//assertThat(response.getBody()).hasSize(2);
 	}
 }

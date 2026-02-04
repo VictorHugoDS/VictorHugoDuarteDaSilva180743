@@ -20,8 +20,10 @@ public class FotoEntity {
     private Integer id;
 
     private String nome;
+
     @Column(name = "nome_identificacao", nullable = false, length = 255)
     private String nomeIdentificacao;
+
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
