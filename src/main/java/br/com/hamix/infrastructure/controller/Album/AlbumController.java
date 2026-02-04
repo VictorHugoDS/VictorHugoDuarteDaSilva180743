@@ -2,7 +2,6 @@ package br.com.hamix.infrastructure.controller.Album;
 
 import br.com.hamix.config.exception.custom.ConversionException;
 import br.com.hamix.domain.model.Album;
-import br.com.hamix.domain.model.Artista;
 import br.com.hamix.domain.pagination.PaginationRequest;
 import br.com.hamix.domain.pagination.PaginationResponse;
 import br.com.hamix.infrastructure.controller.Album.dto.ArtistaDTO;
@@ -193,8 +192,8 @@ public class AlbumController {
             description = "Recupera uma lista de urls das fotos do respectivo album",
             tags = "Album")
     @ApiResponse(responseCode = "200", description = "Url das fotos recuperadas com sucesso")
-    @GetMapping(value = "/{idAlbum}/fotos", produces = {"multipart/form-data"})
-    public ResponseEntity<List<FotoResponse>> saveFotosAlbum(@PathVariable Integer idAlbum){
+    @GetMapping(value = "/{idAlbum}/fotos")
+    public ResponseEntity<Object> saveFotosAlbum(@PathVariable Integer idAlbum){
         List<FotoResponse> response = recuperarFotosUseCase.recuperarFotosDeAlbum(idAlbum)
                 .stream().map(foto -> FotoResponse
                         .builder()

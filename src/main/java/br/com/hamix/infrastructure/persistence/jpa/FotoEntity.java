@@ -3,7 +3,6 @@ package br.com.hamix.infrastructure.persistence.jpa;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @Entity
 @Table(name = "foto")
@@ -21,6 +20,8 @@ public class FotoEntity {
     private Integer id;
 
     private String nome;
+    @Column(name = "nome_identificacao", nullable = false, length = 255)
+    private String nomeIdentificacao;
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -5,6 +5,8 @@ import br.com.hamix.domain.gateway.FotoGateway;
 import br.com.hamix.domain.model.Album;
 import br.com.hamix.domain.model.Foto;
 import java.util.List;
+
+import br.com.hamix.infrastructure.storage.FotoStorageGateway;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +20,8 @@ class RecuperarFotosServiceTest {
 	void recuperarFotosDeAlbum_fetchesAlbumAndFotos() {
 		AlbumGateway albumGateway = mock(AlbumGateway.class);
 		FotoGateway fotoGateway = mock(FotoGateway.class);
-		RecuperarFotosService service = new RecuperarFotosService(albumGateway, fotoGateway);
+		FotoStorageGateway fotoStorageGateway = mock(FotoStorageGateway.class);
+		RecuperarFotosService service = new RecuperarFotosService(albumGateway, fotoGateway,fotoStorageGateway);
 
 		Album album = new Album(4, "Meteora", "2003");
 		when(albumGateway.findById(4)).thenReturn(album);

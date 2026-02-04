@@ -8,6 +8,7 @@ public class FotoEntityMapper {
         return FotoEntity.builder()
                 .id(domain.getId())
                 .nome(domain.getNome())
+                .nomeIdentificacao(domain.getNomeIdentificacao())
                 .album(AlbumEntityMapper.toEntity(domain.getAlbum()))
                 .build();
     }
@@ -15,6 +16,7 @@ public class FotoEntityMapper {
         return Foto.builder()
                 .id(entity.getId())
                 .nome(entity.getNome())
+                .nomeIdentificacao(entity.getNomeIdentificacao())
                 .album(AlbumEntityMapper.toDomain(entity.getAlbum()))
                 .build();
     }
